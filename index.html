@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 游戏活动日历</title>
+  <meta name="description" content="一个支持多游戏、状态筛选的活动日历，直接在浏览器使用，无需安装，支持离线。">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1 class="title">🎮 游戏活动日历</h1>
+    <toolbar-component
+      :games="games"
+      v-model:selected-game="selectedGame"
+      v-model:selected-status="selectedStatus"
+      v-model:view-mode="viewMode"
+      @add-event="showForm = true">
+    </toolbar-component>
+    <calendar-view
+      v-if="viewMode === 'calendar'"
+      :events="filteredEvents"
+      @select-event="selectEvent">
+    </calendar-view>
+    <list-view
+      v-if="viewMode === 'list'"
+      :events="filteredEvents"
+      @select-event="selectEvent">
+    </list-view>
+    <event-detail
+      v-if="selectedEvent"
+      :event="selectedEvent"
+      @close="selectedEvent = null"
+      @delete="deleteEvent"
+      @edit="editEvent">
+    </event-detail>
+    <event-form
+      v-if="showForm"
+      :edit-data="editData"
+      :games="games"
+      @save="saveEvent"
+      @close="showForm = false">
+    </event-form>
+  </div>
+  <footer>
+    <p>Made with ❤️ | 数据保存在浏览器，无需登录</p>
+  </footer>
+  <script src="main.js"></script>
+</body>
+</html>
